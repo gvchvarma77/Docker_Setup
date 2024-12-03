@@ -1,0 +1,20 @@
+name: Enforce Branch Naming
+
+on:
+  create:
+    branches:
+      - "feature/**"  # This triggers the workflow on branch creation starting with 'feature/'
+
+jobs:
+  check-branch-name:
+    runs-on: ubuntu-latest  # Runs the job on an Ubuntu runner
+
+    steps:
+      - name: Check branch naming convention
+        run: |
+          BRANCH_NAME=${{ github.ref_name }}
+          # Regex pattern to enforce naming convention
+          if [[ ! $BRANCH_NAME =~ ^feature/[a-z]+-[0-9]+$ ]]; then
+            echo "Branch name '$BRANCH_NAME' does not follow the naming convention 'feature/<category>-<number>'"
+            exit 1  # Exits with error if branch name doesn't match
+          fi
